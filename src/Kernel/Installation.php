@@ -2,35 +2,26 @@
 
 namespace OJezu\DynamicParameterBundle\Kernel;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-
 class Installation
 {
-    const TYPE_PROD = 'prod';
-    const TYPE_NEXT = 'next';
+    /**
+     * @var string
+     */
+    private $name;
 
-    const TYPES = [
-        self::TYPE_PROD,
-        self::TYPE_NEXT,
-    ];
-
-    public function __construct($name, $type)
+    /**
+     * @param $name
+     */
+    public function __construct($name)
     {
-        if (!in_array($type, self::TYPES)) {
-            throw new InvalidConfigurationException('Unknown installation type: '.$type);
-        }
-
         $this->name = $name;
-        $this->type = $type;
     }
 
     /**
-     * @var string
+     * @return string
      */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $type;
+    public function name()
+    {
+        return $this->name;
+    }
 }

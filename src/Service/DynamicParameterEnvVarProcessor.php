@@ -32,8 +32,11 @@ class DynamicParameterEnvVarProcessor implements EnvVarProcessorInterface
      * @param array $parameterMap
      * @param bool $loadConfiguration
      */
-    public function __construct(ParameterProviderInterface $parameterProvider, array $parameterMap, $loadConfiguration = true)
-    {
+    public function __construct(
+        ParameterProviderInterface $parameterProvider,
+        array $parameterMap,
+        $loadConfiguration = true
+    ) {
         $this->parameterProvider = $parameterProvider;
         $this->parameterMap = $parameterMap;
         $this->cache = [];

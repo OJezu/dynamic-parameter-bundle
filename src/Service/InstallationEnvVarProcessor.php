@@ -35,11 +35,21 @@ class InstallationEnvVarProcessor implements EnvVarProcessorInterface
      */
     public function getEnv($prefix, $name, \Closure $getEnv)
     {
-        if (!property_exists($this->installation, $name)) {
-            throw new InvalidArgumentException(sprintf('Installation object does not have »%s« property', $name));
+        $result = null;
+
+        if (is_callable([$this->installation, $name])) {
+            $result = $this->installation->{$name}();
+        } elseif (property_exists($this->installation, $name)) {
+            //TODO: reflection maybe?
+            $result = $this->installation->$name;
+        } else {
+            throw new InvalidArgumentException(sprintf(
+                'Installation object does not have »%s« property or method',
+                $name
+            ));
         }
 
-        return $this->installation->$name;
+        return $result;
     }
 
     /**

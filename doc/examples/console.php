@@ -11,7 +11,7 @@ $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
 $requestedInstallation = $input->getParameterOption(['--installation']);
 
-$installation = new Installation($requestedInstallation, Installation::TYPE_PROD);
+$installation = new Installation($requestedInstallation);
 $kernel = new AppKernel($installation, $env);
 $application = new Application($kernel);
 $application->run($input);
