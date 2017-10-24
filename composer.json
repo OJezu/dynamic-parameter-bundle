@@ -1,0 +1,32 @@
+{
+    "name": "ojezu/dynamic-parameter-bundle",
+    "description": "Symfony3.4 bundle that facilitates dynamic parameter loading at start of each request",
+    "autoload": {
+        "psr-4": { "OJezu\\DynamicParameterBundle\\": "src/" }
+    },
+    "authors": [
+        {
+            "name": "Krzysztof Chrapka",
+            "email": "composer@ojezu.org"
+        }
+    ],
+    "require": {
+        "symfony/dependency-injection": "^3.4",
+        "symfony/config": "^3.4",
+        "symfony/http-kernel": "^3.4",
+        "symfony/expression-language": "^3.3"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "tool/install-hooks"
+        ],
+        "test": [
+            "tool/verify-all"
+        ]
+    },
+    "minimum-stability": "dev",
+    "license": "MIT"
+}
