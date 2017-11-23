@@ -128,14 +128,16 @@ In order to be able to use multi-installation support:
     }
     ```
 
-3. Make sure that in all places where kernel is created in your application, it is provided with `Installation` instance. Kernel is usually created by `web/*.php` files, but remember to modify your `bin/console` too.
+3. Make sure that in all places where kernel is created in your application, it is provided with `Installation` instance. Kernel is usually created by `web/*.php` or `public/*.php` files, but remember to modify your `bin/console` too.
 
     ```php
     <?php
     (...)
-    $installation = new Installation($requestedInstallation, Installation::TYPE_PROD);
+    $installation = new Installation($requestedInstallation);
     $kernel = new AppKernel($installation, $env, $debug);
     ```
+
+   Complete examples can be found in `doc/examples` directory of this repository.
 
 4. In `bin/console` be sure to also swap `Application` with one provided by this bundle, if you want to specify installation via CLI option - otherwise parsing of argv may introduce problems.
 
@@ -238,7 +240,7 @@ ojezu_dynamic_parameter:
         json_provider:
             file_path: '%kernel.root_dir%/config/config.json'
         processor:
-            load_configuration: '%env(bool:ojezu_installation:name)%
+            load_configuration: '%env(bool:ojezu_installation:name)%'
             parameter_map:
                 database_host: {path: ['installation', '%env(ojezu_installation:name)%', 'database', 'host']}
                 log_channel: {path: ['log', '%env(ojezu_installation:name)%'], default: 'default', no_config_value: 'default'}
