@@ -50,7 +50,14 @@ class JsonFileParameterProvider implements ParameterProviderInterface
     private function jsonFileContent()
     {
         if (!$this->fileContent) {
-            $this->fileContent = json_decode(file_get_contents($this->jsonFilePath), true);
+            $contents = @file_get_contents($this->jsonFilePath);
+
+            if ($contents === false) {
+                clearstatcache(true, $this->jsonFilePath);
+                $contents = file_get_contents($this->jsonFilePath);
+            }
+
+            $this->fileContent = json_decode($contents, true);
 
             if (!$this->fileContent) {
                 throw new InvalidConfigurationException(sprintf(
