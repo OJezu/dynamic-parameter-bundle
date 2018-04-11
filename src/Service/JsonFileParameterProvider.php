@@ -53,7 +53,9 @@ class JsonFileParameterProvider implements ParameterProviderInterface
             $contents = @file_get_contents($this->jsonFilePath);
 
             if ($contents === false) {
-                clearstatcache(true, $this->jsonFilePath);
+                // when only cache for $this->jsonFilePath is cleared by passing a second argument to clearstatcache
+                // it still does not work half the time
+                clearstatcache(true);
                 $contents = file_get_contents($this->jsonFilePath);
             }
 
