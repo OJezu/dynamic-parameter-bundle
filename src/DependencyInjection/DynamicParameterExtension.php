@@ -4,7 +4,6 @@ namespace OJezu\DynamicParameterBundle\DependencyInjection;
 
 use OJezu\DynamicParameterBundle\Service\DynamicParameterEnvVarProcessor;
 use OJezu\DynamicParameterBundle\Service\InstallationEnvVarProcessor;
-use OJezu\DynamicParameterBundle\Service\JsonFileParameterProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -15,7 +14,6 @@ use Symfony\Component\ExpressionLanguage\Expression;
 /**
  * @inheritdoc
  */
-
 class DynamicParameterExtension extends Extension
 {
     /**
@@ -47,30 +45,18 @@ class DynamicParameterExtension extends Extension
         if (array_key_exists('advanced_parameters', $processed)) {
             $paramConfiguration = $processed['advanced_parameters'];
             $providerReference = null;
-
-            if ($paramConfiguration['json_provider']) {
-                $providerDefinition = new Definition(
-                    JsonFileParameterProvider::class,
-                    [$paramConfiguration['json_provider']['file_path']]
-                );
-                $providerDefinition->setPublic(false);
-                $builder->addDefinitions([JsonFileParameterProvider::class => $providerDefinition]);
-
-                $providerReference = new Reference(JsonFileParameterProvider::class);
-            } elseif ($paramConfiguration['processor']['provider']['service']) {
-                $providerReference = new Reference($paramConfiguration['processor']['provider']['service']);
-            }
+            $providerReference = new Reference($paramConfiguration['provider']);
 
             if (!$providerReference) {
                 throw new InvalidConfigurationException(
-                    'OJezu\DynamicParameterBundle: Either a provider must be configured or provider service must be specified.'
+                    'OJezu\DynamicParameterBundle: Provider service must be specified.'
                 );
             }
 
             $processorDefinition = new Definition(DynamicParameterEnvVarProcessor::class, [
                 $providerReference,
-                $paramConfiguration['processor']['parameter_map'],
-                $paramConfiguration['processor']['load_configuration']
+                $paramConfiguration['parameter_map'],
+                $paramConfiguration['load_configuration']
             ]);
 
             $processorDefinition->addTag('container.env_var_processor');

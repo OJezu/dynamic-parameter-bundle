@@ -4,25 +4,12 @@ namespace OJezu\DynamicParameterBundle\Service;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
-class JsonFileParameterProvider implements ParameterProviderInterface
+abstract class JsonParameterProvider implements ParameterProviderInterface
 {
-    /**
-     * @var string
-     */
-    private $jsonFilePath;
-
     /**
      * @var null|array
      */
     private $fileContent;
-
-    /**
-     * @param string $jsonFilePath
-     */
-    public function __construct($jsonFilePath)
-    {
-        $this->jsonFilePath = $jsonFilePath;
-    }
 
     /**
      * @param array $parameterPath
@@ -45,26 +32,23 @@ class JsonFileParameterProvider implements ParameterProviderInterface
     }
 
     /**
+     * @return false|string
+     */
+    abstract protected function getFileContents();
+
+    /**
      * @return array|mixed|null
      */
     private function jsonFileContent()
     {
         if (!$this->fileContent) {
-            $contents = @file_get_contents($this->jsonFilePath);
+            $contents = $this->getFileContents();
 
-            if ($contents === false) {
-                // when only cache for $this->jsonFilePath is cleared by passing a second argument to clearstatcache
-                // it still does not work half the time
-                clearstatcache(true);
-                $contents = file_get_contents($this->jsonFilePath);
-            }
-
-            $this->fileContent = json_decode($contents, true);
+            $this->fileContent = \GuzzleHttp\json_decode($contents, true);
 
             if (!$this->fileContent) {
                 throw new InvalidConfigurationException(sprintf(
-                    'Json file »%s« specified as parameter source is empty.',
-                    $this->jsonFilePath
+                    'Json specified as parameter source is empty.'
                 ));
             }
         }
